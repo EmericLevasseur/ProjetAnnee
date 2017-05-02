@@ -105,7 +105,7 @@ body{
 <div class="space">
 </div>
 
-@if (empty($comments))
+@if (!empty($article->comments))
 <h2>Liste des commentaires</h2>
 @foreach($article->comments AS $comment)
     <div style="border-left:3px solid orange; padding-left:10px;">
@@ -115,8 +115,8 @@ body{
         @if($comment->user)
           <div class="info">
             Posted by {{ $comment->user->name  }} on {{$article->created_at}}
-            @if (Auth::user()->isAdmin == 1)
-            <form action="{{ route('comment.destroyComment', $comment->id) }}" method="post" style="display: inline-block;">
+            @if (Auth::user()->isAdmin == 1|| $article->user_id == Auth::user()->id)
+            <form action="{{ route('destroyComment', $comment->id) }}" method="post" style="display: inline-block;">
                 {{ csrf_field() }}
                 <input type="hidden" name="_method" value="DELETE">
                 <button class="btn btn-danger">Supprimer</button>

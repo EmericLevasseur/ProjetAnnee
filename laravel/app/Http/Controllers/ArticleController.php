@@ -90,9 +90,8 @@ class ArticleController extends Controller
      */
     public function edit($id)
     {
-
+      if(Auth::check() && Auth::user()->isAdmin == "1") {
       $article = Article::where('id', $id)->with(['user'])->firstOrFail();
-      if(Auth::check() && Auth::user()->isAdmin == "1" || $article->user_id == Auth::user()->id) {
       $users   = User::all();
 
       return view('articles.edit')->with([
@@ -146,19 +145,14 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-
-      $article = Article::find($id);
-
-      if(Auth::check() && Auth::user()->isAdmin == "1" || $article->user_id == Auth::user()->id) {
-
-        $article->delete([
+      if(Auth::check() && Auth::user()->isAdmin == "1") {
+      $article = Article::find($id)->delete([
         'user_id' => Auth::user()->id,
 
       ]);
 
       session()->flash('alert-danger', 'Article supprimé!');
       return redirect()->route('article.index');
-
     }else{
         return view ('home');
     }
@@ -188,24 +182,19 @@ class ArticleController extends Controller
 
     }
 
-
     public function destroyComment($id)
     {
-      $comment = Comment::find($id);
+      if(Auth::check() && Auth::user()->isAdmin == "1") {
+        $comment = Comment::find($id)->delete([
+          'user_id' => Auth::user()->id,
 
-      if(Auth::check() && Auth::user()->isAdmin == "1" || $article->user_id == Auth::user()->id) {
+        ]);
 
-        $comment->delete([
-        'user_id' => Auth::user()->id,
-        'article_id' => Article::find($id),
-
-      ]);
-
-      session()->flash('alert-danger', 'Commentaire supprimé');
-      return redirect()->route('article.index');
-    }else{
-        return view ('home');
-    }
+        session()->flash('alert-danger', 'Commentaire supprimé');
+        return redirect()->route('article.index');
+      }else{
+          return view ('home');
+      }
     }
 
 
