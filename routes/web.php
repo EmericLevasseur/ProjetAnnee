@@ -31,6 +31,10 @@ Route::get('/admin', [
   'as' => 'index'
 ]);
 
+Route::get('/comment/{id}', [
+  'uses' => 'ArticleController@destroyComment',
+  'as' => 'comment.destroyComment'
+]);
 
 
 Route::get('/editUser', [
@@ -47,14 +51,13 @@ Route::post('/updateaccount', [
 Route::get('/userimage/{filename}', [
   'uses' => 'HomeController@getSaveAccount',
   'as' => 'account.image'
+
 ]);
 
 Route::post('article/{id}/comment', [
     'as'   => 'article.comment',
     'uses' => 'ArticleController@postComment'
 ]);
-
-
 
 Route::get('/sendmail', [
   'uses' => 'HomeController@sendmail',
