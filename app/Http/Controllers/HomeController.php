@@ -76,21 +76,6 @@ class HomeController extends Controller
     return new Response($file, 200);
 
   }
-  
-  public function destroyComment($id)
-  {
-    if(Auth::check() && Auth::user()->isAdmin == "1") {
-      $comment = Comment::find($id)->delete([
-        'user_id' => Auth::user()->id,
-
-      ]);
-
-      session()->flash('alert-danger', 'Commentaire supprimé');
-      return redirect()->route('article.index');
-    }else{
-        return view ('home');
-    }
-  }
 
   public function sendmail(Request $request){
 
